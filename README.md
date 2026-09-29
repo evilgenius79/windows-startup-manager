@@ -6,10 +6,11 @@ A PowerShell Windows Forms app that lists programs, tasks, and services set to r
 
 - `StartupManager.ps1` - the GUI
 - `Run-StartupManager.bat` - double-click launcher
+- `Build-Exe.ps1` - optional wrapper that builds `dist\StartupManager.exe`
 
 ## Run it
 
-1. Download the two files into the same folder.
+1. Download the files into the same folder.
 2. Right-click `Run-StartupManager.bat` and choose **Run as administrator**.
 
 Or from PowerShell:
@@ -26,6 +27,27 @@ If Windows still blocks the script:
 ```powershell
 Unblock-File .\StartupManager.ps1
 ```
+
+## Build an exe
+
+The script can be wrapped as a Windows GUI executable with [ps2exe](https://www.powershellgallery.com/packages/ps2exe). The exe still uses PowerShell internally. It is not a separately compiled C# app.
+
+From the repo folder, in PowerShell:
+
+```powershell
+Unblock-File .\Build-Exe.ps1
+powershell -ExecutionPolicy Bypass -File .\Build-Exe.ps1
+```
+
+That creates `dist\StartupManager.exe` and requests Administrator on launch (UAC prompt).
+
+Optional icon: put `StartupManager.ico` in the repo folder before building.
+
+Notes:
+
+- First run may show a SmartScreen warning because the exe is unsigned.
+- Some antivirus tools flag PS2EXE wrappers generically. That is a known pattern, not proof the file is malware.
+- To build without the admin manifest: `.\Build-Exe.ps1 -NoAdminManifest`
 
 ## What it shows
 
