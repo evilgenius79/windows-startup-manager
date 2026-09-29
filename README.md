@@ -2,11 +2,18 @@
 
 A PowerShell Windows Forms app that lists programs, tasks, and services set to run at boot or logon, and lets you enable or disable them. It also has on/off controls for Windows Firewall and Microsoft Defender real-time protection.
 
+## Download
+
+Releases with `StartupManager.exe` are published from GitHub Actions:
+
+https://github.com/evilgenius79/windows-startup-manager/releases
+
 ## Files
 
 - `StartupManager.ps1` - the GUI
 - `Run-StartupManager.bat` - double-click launcher
-- `Build-Exe.ps1` - optional wrapper that builds `dist\StartupManager.exe`
+- `Build-Exe.ps1` - local wrapper that builds `dist\\StartupManager.exe`
+- `.github/workflows/build-exe.yml` - builds the exe on GitHub and attaches it to a Release
 
 ## Run it
 
@@ -16,8 +23,8 @@ A PowerShell Windows Forms app that lists programs, tasks, and services set to r
 Or from PowerShell:
 
 ```powershell
-Unblock-File .\StartupManager.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -STA -File .\StartupManager.ps1
+Unblock-File .\\StartupManager.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -STA -File .\\StartupManager.ps1
 ```
 
 Administrator rights are required to change all-users registry keys, services, firewall, and Defender.
@@ -25,21 +32,38 @@ Administrator rights are required to change all-users registry keys, services, f
 If Windows still blocks the script:
 
 ```powershell
-Unblock-File .\StartupManager.ps1
+Unblock-File .\\StartupManager.ps1
 ```
 
-## Build an exe
+## GitHub-built exe
 
-The script can be wrapped as a Windows GUI executable with [ps2exe](https://www.powershellgallery.com/packages/ps2exe). The exe still uses PowerShell internally. It is not a separately compiled C# app.
+The Windows runner wraps the script with [ps2exe](https://www.powershellgallery.com/packages/ps2exe) and attaches `StartupManager.exe` to a Release.
 
-From the repo folder, in PowerShell:
+### Publish a release
+
+1. Open [Actions](https://github.com/evilgenius79/windows-startup-manager/actions).
+2. Select **Build exe**.
+3. Click **Run workflow**.
+4. Leave the tag as `v1.0.0` or set a new tag such as `v1.0.1`.
+5. After the job finishes, the exe is on [Releases](https://github.com/evilgenius79/windows-startup-manager/releases).
+
+Or push a version tag:
 
 ```powershell
-Unblock-File .\Build-Exe.ps1
-powershell -ExecutionPolicy Bypass -File .\Build-Exe.ps1
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
-That creates `dist\StartupManager.exe` and requests Administrator on launch (UAC prompt).
+A manual run with a blank tag only uploads an Actions artifact. It does not create a Release.
+
+## Build an exe locally
+
+```powershell
+Unblock-File .\\Build-Exe.ps1
+powershell -ExecutionPolicy Bypass -File .\\Build-Exe.ps1
+```
+
+That creates `dist\\StartupManager.exe` and requests Administrator on launch (UAC prompt).
 
 Optional icon: put `StartupManager.ico` in the repo folder before building.
 
@@ -47,7 +71,7 @@ Notes:
 
 - First run may show a SmartScreen warning because the exe is unsigned.
 - Some antivirus tools flag PS2EXE wrappers generically. That is a known pattern, not proof the file is malware.
-- To build without the admin manifest: `.\Build-Exe.ps1 -NoAdminManifest`
+- To build without the admin manifest: `.\\Build-Exe.ps1 -NoAdminManifest`
 
 ## What it shows
 
